@@ -1,0 +1,13 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="API Suite" verbose="1">
+    <test name="Component tests">
+        <classes>
+            <class name="com.api.automation.api.comp.TodosCompTest"/>
+        </classes>
+    </test>
+    <test name="E2E tests">
+        <classes>
+            <class name="com.api.automation.api.e2e.TodoE2ETest"/>
+        </classes>
+    </test>
+</suite>
