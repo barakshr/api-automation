@@ -1,17 +1,14 @@
 package com.api.automation.core.http;
 
-import com.api.automation.core.config.ConfigInfo;
+import com.api.automation.core.config.ApiConfig;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.filter.log.RequestLoggingFilter;
-import io.restassured.filter.log.ResponseLoggingFilter;
+
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-
 
 /**
  * Shared HTTP client: base URI, timeouts, logging, and auth headers.
@@ -21,15 +18,12 @@ public class BaseApiClient {
 
     private static final Logger log = LoggerFactory.getLogger(BaseApiClient.class);
 
-
-    private final ConfigInfo config;
+    private final ApiConfig config;
     private String challengerId;
     private String bearerToken;
-    
-    
 
     public BaseApiClient() {
-        this.config = ConfigInfo.get();
+        this.config = ApiConfig.getInstance();
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
     }
 
@@ -102,11 +96,6 @@ public class BaseApiClient {
                 .setRelaxedHTTPSValidation();
 
         applyAuth(builder);
-
-        if (config.isRequestLoggingEnabled()) {
-            builder.addFilter(new RequestLoggingFilter());
-            builder.addFilter(new ResponseLoggingFilter());
-        }
 
         return RestAssured.given().spec(builder.build());
     }
