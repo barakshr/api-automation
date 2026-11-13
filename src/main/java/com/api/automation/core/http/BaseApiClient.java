@@ -66,8 +66,8 @@ abstract public class BaseApiClient {
         RequestSpecBuilder builder = new RequestSpecBuilder()
                 .setBaseUri(tempContent.getBaseUrl())
                 .setContentType(tempContent.getContentType())
-                .setAuth(null)
-                .addHeaders(content.getHeadersAsMap())
+                // .setAuth(null)
+                // .addHeaders(content.getHeadersAsMap())
                 .setAccept(ContentType.JSON);
 
         return RestAssured.given().spec(builder.build());
