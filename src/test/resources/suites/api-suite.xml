@@ -7,7 +7,7 @@
     </test>
     <test name="E2E tests">
         <classes>
-            <class name="com.api.automation.api.e2e.TodoE2ETest"/>
+            <class name="com.api.automation.api.e2e.E2ETest"/>
         </classes>
     </test>
 </suite>

@@ -5,24 +5,21 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Todo {
+public class Challenge {
 
     private Integer id;
-    private String title;
-    private Boolean doneStatus;
+    private String name;
     private String description;
+    private Boolean status;
 
-    public Todo() {
+    public Challenge() {
     }
 
-    public Todo(String title, Boolean doneStatus, String description) {
-        this.title = title;
-        this.doneStatus = doneStatus;
+    public Challenge(Integer id, String name, String description, Boolean status) {
+        this.id = id;
+        this.name = name;
         this.description = description;
-    }
-
-    public static Todo of(String title, boolean doneStatus) {
-        return new Todo(title, doneStatus, "");
+        this.status = status;
     }
 
     public Integer getId() {
@@ -33,20 +30,12 @@ public class Todo {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Boolean getDoneStatus() {
-        return doneStatus;
-    }
-
-    public void setDoneStatus(Boolean doneStatus) {
-        this.doneStatus = doneStatus;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -55,5 +44,13 @@ public class Todo {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 }

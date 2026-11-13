@@ -1,127 +1,81 @@
 package com.api.automation.core.http;
 
-import com.api.automation.core.config.ApiConfig;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
-
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Shared HTTP client: base URI, timeouts, logging, and auth headers.
- * Auth (X-CHALLENGER / Bearer JWT) lives here for v1; split later if needed.
- */
-public class BaseApiClient {
+abstract public class BaseApiClient {
 
     private static final Logger log = LoggerFactory.getLogger(BaseApiClient.class);
 
-    private final ApiConfig config;
-    private String challengerId;
-    private String bearerToken;
+    private final Content content;
 
-    public BaseApiClient() {
-        this.config = ApiConfig.getInstance();
+    protected BaseApiClient() {
+        this.content = Content.getBuilder().build();
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
     }
 
-    public BaseApiClient withChallengerId(String challengerId) {
-        this.challengerId = challengerId;
-        return this;
+    protected BaseApiClient(Content content) {
+        this.content = content;
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
     }
 
-    public BaseApiClient withBearerToken(String bearerToken) {
-        this.bearerToken = bearerToken;
-        return this;
+    protected ApiResult get(String path) {
+        Response response = givenBase().when().get(path).then().extract().response();
+        return new ApiResult(response);
     }
 
-    public String getChallengerId() {
-        return challengerId;
+    protected ApiResult get(String path, String query) {
+        Response response = givenBase().when().get(withQuery(path, query)).then().extract().response();
+        return new ApiResult(response);
     }
 
-    /**
-     * Creates an API Challenges session and stores X-CHALLENGER for later calls.
-     */
-    public String createChallengerSession() {
-        Response response = givenBase()
-                .when()
-                .post("/api/challenger")
-                .then()
-                .extract()
-                .response();
-
-        String id = response.getHeader("X-CHALLENGER");
-        if (id == null || id.isBlank()) {
-            id = response.jsonPath().getString("challenger");
-        }
-        if (id == null || id.isBlank()) {
-            throw new IllegalStateException("Could not obtain X-CHALLENGER from POST /api/challenger");
-        }
-        this.challengerId = id;
-        log.info("Created challenger session: {}", challengerId);
-        return challengerId;
-    }
-
-    public Response get(String path) {
-        return givenBase().when().get(path).then().extract().response();
-    }
-
-    public Response post(String path, Object body) {
+    protected ApiResult post(String path, Object body) {
         RequestSpecification spec = givenBase();
         if (body != null) {
             spec.body(body);
         }
-        return spec.when().post(path).then().extract().response();
+        Response response = spec.when().post(path).then().extract().response();
+        return new ApiResult(response);
     }
 
-    public Response put(String path, Object body) {
-        RequestSpecification spec = givenBase();
+    protected Response put(String path, Object body, Content... optionalContent) {
+        RequestSpecification spec = givenBase(optionalContent);
         if (body != null) {
             spec.body(body);
         }
         return spec.when().put(path).then().extract().response();
     }
 
-    public Response delete(String path) {
+    protected Response delete(String path) {
         return givenBase().when().delete(path).then().extract().response();
     }
 
-    protected RequestSpecification givenBase() {
-        RequestSpecBuilder builder = new RequestSpecBuilder()
-                .setBaseUri(config.getBaseUri())
-                .setContentType(ContentType.JSON)
-                .setAccept(ContentType.JSON)
-                .setRelaxedHTTPSValidation();
+    private RequestSpecification givenBase(Content... optionalContent) {
 
-        applyAuth(builder);
+        Content tempContent;
+        if (optionalContent.length != 0) {
+            tempContent = optionalContent[0];
+        } else {
+            tempContent = content;
+        }
+        RequestSpecBuilder builder = new RequestSpecBuilder()
+                .setBaseUri(tempContent.getBaseUrl())
+                .setContentType(tempContent.getContentType())
+                .setAuth(null)
+                .addHeaders(content.getHeadersAsMap())
+                .setAccept(ContentType.JSON);
 
         return RestAssured.given().spec(builder.build());
     }
 
-    private void applyAuth(RequestSpecBuilder builder) {
-        String authType = config.getAuthType();
-        if ("none".equalsIgnoreCase(authType)) {
-            return;
-        }
-        if ("bearer".equalsIgnoreCase(authType)) {
-            if (bearerToken != null && !bearerToken.isBlank()) {
-                builder.addHeader("Authorization", "Bearer " + bearerToken);
-            } else {
-                String fromEnv = System.getenv("JWT");
-                if (fromEnv == null || fromEnv.isBlank()) {
-                    fromEnv = System.getenv("API_TOKEN");
-                }
-                if (fromEnv != null && !fromEnv.isBlank()) {
-                    builder.addHeader("Authorization", "Bearer " + fromEnv);
-                }
-            }
-            return;
-        }
-        // default: challenger (API Challenges)
-        if (challengerId != null && !challengerId.isBlank()) {
-            builder.addHeader("X-CHALLENGER", challengerId);
-        }
+    private static String withQuery(String path, String query) {
+        String q = query.trim();
+        return path + (q.startsWith("?") ? q : "?" + q);
     }
+
 }
