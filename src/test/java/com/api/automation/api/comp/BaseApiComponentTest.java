@@ -8,13 +8,13 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 
 public class BaseApiComponentTest {
 
-        protected static final int WIREMOCK_PORT = 3;
+        private static final int DEFAULT_WIREMOCK_PORT = 3;
 
         private WireMockServer wireMockServer;
 
         @BeforeClass
         public void setup() {
-                wireMockServer = new WireMockServer(wireMockConfig().port(WIREMOCK_PORT));
+                wireMockServer = new WireMockServer(wireMockConfig().port(resolveWireMockPort()));
                 wireMockServer.start();
         }
 
@@ -27,6 +27,14 @@ public class BaseApiComponentTest {
 
         protected WireMockServer getServer() {
                 return wireMockServer;
+        }
+
+        private int resolveWireMockPort() {
+                String fromEnv = System.getenv("WIREMOCK_PORT");
+                if (fromEnv != null && !fromEnv.isBlank()) {
+                        return Integer.parseInt(fromEnv);
+                }
+                return DEFAULT_WIREMOCK_PORT;
         }
 
 }

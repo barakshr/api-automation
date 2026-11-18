@@ -19,7 +19,7 @@ public final class ApiConfig {
         if (apiConfig == null) {
             synchronized ((ApiConfig.class)) {
                 if (apiConfig == null) {
-                    ApiConfig.apiConfig = new ApiConfig();
+                    apiConfig = new ApiConfig();
                 }
             }
         }
