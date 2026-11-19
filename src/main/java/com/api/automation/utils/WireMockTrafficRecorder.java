@@ -31,7 +31,10 @@ public class WireMockTrafficRecorder implements AutoCloseable {
                                 .forTarget(targetBaseUrl)
                                 .makeStubsPersistent(true)
                                 .ignoreRepeatRequests()
-                                .matchRequestBodyWithEqualToJson(false, true));
+                                .matchRequestBodyWithEqualToJson(false, true)
+                                .captureHeader("Accept")
+                                .captureHeader("Content-Type")
+                                .captureHeader("X-Correlation-Id"));
         }
 
         public SnapshotRecordResult stopRecording() {
@@ -48,9 +51,8 @@ public class WireMockTrafficRecorder implements AutoCloseable {
         }
 
         public static void main(String[] args) throws Exception {
-                String targetBaseUrl = args.length > 0
-                                ? args[0]
-                                : "https://REPLACE_WITH_REAL_DEPENDENCY";
+                // From activities-service: activity.base-url
+                String targetBaseUrl = "http://www.boredapi.com";
 
                 try (WireMockTrafficRecorder recorder = new WireMockTrafficRecorder(targetBaseUrl)) {
                         System.out.println("Recording on http://localhost:" + PORT);

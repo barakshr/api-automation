@@ -1,0 +1,25 @@
+{
+  "id" : "9a95dd69-3900-4610-8ad5-242880cc97a1",
+  "name" : "json_version",
+  "request" : {
+    "url" : "/json/version",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 301,
+    "headers" : {
+      "CF-RAY" : "a5d152fe3ab77546-TLV",
+      "Server" : "cloudflare",
+      "Nel" : "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "Report-To" : "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=DR6a6GUiGXMNBv%2FLXWKdNdmosptpDsKjyuvxcf3fRQYfqBrCmzjY16hmwsbETRRknafTyWiKwmSI10cv7sHmSF0WayIXBelHhlML6r02eYSUT34JngXY5TK9IP%2FRXtgncxg%2F\"}]}",
+      "Server-Timing" : [ "cfCacheStatus;desc=\"DYNAMIC\"", "cfEdge;dur=12,cfOrigin;dur=562" ],
+      "location" : "https://www.boredapi.com/json/version",
+      "cf-cache-status" : "DYNAMIC",
+      "alt-svc" : "h3=\":443\"; ma=86400",
+      "Date" : "Thu, 19 Nov 2026 18:37:06 GMT"
+    }
+  },
+  "uuid" : "9a95dd69-3900-4610-8ad5-242880cc97a1",
+  "persistent" : true,
+  "insertionIndex" : 1
+}
