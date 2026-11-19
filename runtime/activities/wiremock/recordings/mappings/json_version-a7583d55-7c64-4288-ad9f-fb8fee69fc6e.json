@@ -1,0 +1,15 @@
+{
+  "id" : "a7583d55-7c64-4288-ad9f-fb8fee69fc6e",
+  "name" : "json_version",
+  "request" : {
+    "url" : "/json/version",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 500,
+    "bodyFileName" : "json_version-a7583d55-7c64-4288-ad9f-fb8fee69fc6e.txt"
+  },
+  "uuid" : "a7583d55-7c64-4288-ad9f-fb8fee69fc6e",
+  "persistent" : true,
+  "insertionIndex" : 2
+}

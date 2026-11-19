@@ -1,0 +1,2 @@
+Network failure trying to make a proxied request from WireMock to https://REPLACE_WITH_REAL_DEPENDENCY/json/version
+REPLACE_WITH_REAL_DEPENDENCY
